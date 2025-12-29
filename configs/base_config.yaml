@@ -1,0 +1,12 @@
+# Basic configuration (will be used later for the simulation)
+
+
+world_cup:
+  year: 2014
+  wc_start_date: "2014-06-12"
+  ranking_snapshot_date: "2014-06-05"
+
+simulation:
+  n_simulations: 10000
+  seed: 42
+  strength_scaling_k: 8.0

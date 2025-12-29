@@ -1,0 +1,14 @@
+This file summarizes the final simulation setup and results.
+
+
+WM 2014 Monte Carlo Simulation (student version)
+N simulations: 20000
+Seed: 42
+BASE_GOALS: 1.3
+Output:
+- reports/wm2014_title_probabilities.csv
+- figures/wm2014_title_probabilities.png
+
+Model notes:
+- Group tie-break simplified: points, goal difference, then random.
+- Knockout draws resolved by strength-weighted penalties.
