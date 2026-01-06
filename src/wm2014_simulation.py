@@ -15,18 +15,6 @@ N_SIMULATIONS = 20000
 SEED = 42
 BASE_GOALS = 1.3  # controls typical goal level
 
-from pathlib import Path
-import numpy as np
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# -------------------------
-# SETTINGS 
-# -------------------------
-N_SIMULATIONS = 20000
-SEED = 42
-BASE_GOALS = 1.3  # controls typical goal level
-
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 DATA_PATH = PROJECT_ROOT / "data" / "processed" / "teams_strengths_pre_wc_2014.csv"
