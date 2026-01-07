@@ -106,20 +106,6 @@ def simulate_match(team_a: str, team_b: str) -> tuple[int, int]:
     ga = int(rng.poisson(lam_a))
     gb = int(rng.poisson(lam_b))
     return ga, gb
-    sa = float(STRENGTH[team_a])
-    sb = float(STRENGTH[team_b])
-
-    # simple strength share
-    denom = sa + sb + 1e-12
-    share_a = sa / denom
-    share_b = sb / denom
-
-    lam_a = max(0.05, BASE_GOALS * share_a)
-    lam_b = max(0.05, BASE_GOALS * share_b)
-
-    ga = int(rng.poisson(lam_a))
-    gb = int(rng.poisson(lam_b))
-    return ga, gb
 
 def knockout_winner(team_a: str, team_b: str) -> str:
     """
