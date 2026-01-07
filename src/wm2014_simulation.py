@@ -74,6 +74,38 @@ ROUND_OF_16 = [
 # MATCH MODEL (Poisson goals)
 # -------------------------
 def simulate_match(team_a: str, team_b: str) -> tuple[int, int]:
+    """
+    Simulates a single football match between two teams.
+
+    The number of goals for each team is generated using a Possion distribution.
+    The expected goals depend on the realative team strengths derived from FIFA rankings.
+
+    Parameters:
+    team_a : str
+        Name of the first team
+    team_b : str
+        Name of the second team
+
+    Returns:
+    ga : int
+        Goals scored by team A
+    gb: int
+        Goals scored by team B
+    """
+    sa = float(STRENGTH[team_a])
+    sb = float(STRENGTH[team_b])
+
+    # simple strength share
+    denom = sa + sb + 1e-12
+    share_a = sa / denom
+    share_b = sb / denom
+
+    lam_a = max(0.05, BASE_GOALS * share_a)
+    lam_b = max(0.05, BASE_GOALS * share_b)
+
+    ga = int(rng.poisson(lam_a))
+    gb = int(rng.poisson(lam_b))
+    return ga, gb
     sa = float(STRENGTH[team_a])
     sb = float(STRENGTH[team_b])
 
@@ -90,6 +122,22 @@ def simulate_match(team_a: str, team_b: str) -> tuple[int, int]:
     return ga, gb
 
 def knockout_winner(team_a: str, team_b: str) -> str:
+    """
+    Determines the winner of a knockout match between two teams.
+
+    If the match ends in a draw, the winner is decided by a strength-weight penalty 
+    shootout.
+
+    Parameters:
+    team_a: str
+        Name of the first team.
+    team_b: str
+        Name of the second team.
+
+    Returns:
+    winner: str
+        Name of the winning team
+    """
     ga, gb = simulate_match(team_a, team_b)
 
     if ga > gb:
@@ -97,7 +145,7 @@ def knockout_winner(team_a: str, team_b: str) -> str:
     if gb > ga:
         return team_b
 
-    # draw -> penalties (weighted coin flip)
+    # draw -> penalties 
     sa = float(STRENGTH[team_a])
     sb = float(STRENGTH[team_b])
     p_a = sa / (sa + sb + 1e-12)
@@ -107,7 +155,24 @@ def knockout_winner(team_a: str, team_b: str) -> str:
 # GROUP STAGE
 # -------------------------
 def simulate_group(teams: list[str]) -> tuple[str, str]:
-    # table: points and goal difference only (simple)
+    """
+    Simulates the group stage for a group of four teams.
+
+    Each team plays against every other team once.
+    Teams are ranked by points, then goal difference.
+    Remaining ties are broken randomly.
+
+    Parameters:
+    teams: list of str
+        List of four team names in the group.
+
+    Returns:
+    winner: str
+        Group winnner.
+    runner_up : str
+        Second place of the group
+    """
+    # table: points and goal difference only 
     table = {t: {"pts": 0, "gd": 0} for t in teams}
 
     for i in range(len(teams)):
@@ -135,9 +200,22 @@ def simulate_group(teams: list[str]) -> tuple[str, str]:
     return ranking[0], ranking[1]
 
 # -------------------------
-# TOURNAMENT (return finalists + champion)
+# TOURNAMENT 
 # -------------------------
 def simulate_world_cup_2014() -> tuple[str, str]:
+    """ 
+    Simulates one complete FIFA World Cup 2014 tournament.
+
+    The simulation includes the group stage and all knockout rounds.
+    Group winners and runner-up advance according to the official tournement bracket.
+
+    Returns
+
+    champion: str
+        World Cup winner.
+    runner_up : str
+        Losing finalist
+    """
     slots = {}
 
     # group stage -> slots A1, A2, ...
@@ -173,12 +251,12 @@ for _ in range(N_SIMULATIONS):
     finalists.append(runner_up)
 
 # -------------------------
-# RESULTS (ONLY TITLE PROBABILITY)
+# RESULTS 
 # -------------------------
 
 champ_series = pd.Series(champions)
 
-# Probability of winning the title (World Champion)
+# Probability of winning the title 
 p_title = champ_series.value_counts(normalize=True)
 
 result = pd.DataFrame({
@@ -210,7 +288,7 @@ summary = (
 (REPORTS_DIR / "wm2014_summary.txt").write_text(summary, encoding="utf-8")
 
 # -------------------------
-# PLOT (ONLY TITLE PROBABILITY)
+# PLOT 
 # -------------------------
 TOP_N = 15
 top = result.head(TOP_N).copy()
