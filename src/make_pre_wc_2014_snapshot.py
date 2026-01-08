@@ -3,7 +3,7 @@ import pandas as pd
 
 RAW_PATH = Path("data/raw/fifa_rankings_all_years.csv")
 OUT_DIR = Path("data/interim")
-WC_START = pd.Timestamp("2014-06-12")  # WM-Start Brasilien 2014
+WC_START = pd.Timestamp("2014-06-12")  # World Cup start in Brazil 2014
 
 def main() -> None:
     """
